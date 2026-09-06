@@ -1,8 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates
+from sqlalchemy.ext.associationproxy import association_proxy
 db = SQLAlchemy()
 
 # Define Models here
+# Exercise model
 class Exercise(db.Model):
     __tablename__ = 'exercises'
 
@@ -14,6 +16,7 @@ class Exercise(db.Model):
     def __repr__(self):
         return f'<Exercise {self.id}: {self.name}>'
 
+#Workout model
 class Workout(db.Model):
     __tablename__ = 'workouts'
 
@@ -22,9 +25,16 @@ class Workout(db.Model):
     duration_minutes = db.Column(db.Integer)
     notes = db.Column(db.Text)
 
+    #An Exercise has many WorkoutExercises
+    workout_exercises = db.relationship('WorkoutExercise', back_populates='exercise')
+
+    #An Exercise has many Workouts through WorkoutExercises
+    workouts = association_proxy('workout_exercises', 'workout')
     def __repr__(self):
         return f'<Workout {self.id}: {self.date}>'
 
+
+#Workout_exercise model
 class WorkoutExercise(db.Model):
     __tablename__ = 'workout_exercises'
 
