@@ -32,9 +32,9 @@ with app.app_context():
     links = [
         WorkoutExercise(workout=w1, exercise=squat, reps=10, sets=4),
         WorkoutExercise(workout=w1, exercise=pushup, reps=15, sets=3),
-        WorkoutExercise(workout=w2, exercise=running, duration_minutes=1800),
-        WorkoutExercise(workout=w3, exercise=yoga, duration_minutes=600),
-        WorkoutExercise(workout=w3, exercise=balance, sets=3, duration_minutes=30),
+        WorkoutExercise(workout=w2, exercise=running, duration_seconds=1800),
+        WorkoutExercise(workout=w3, exercise=yoga, duration_seconds=600),
+        WorkoutExercise(workout=w3, exercise=balance, sets=3, duration_seconds=30),
     ]
     db.session.add_all(links)
     db.session.commit()

@@ -63,7 +63,7 @@ class WorkoutExercise(db.Model):
     __table_args__ = (
         db.CheckConstraint('reps >= 0', name='reps_non_negative'),
         db.CheckConstraint('sets >= 0', name='sets_non_negative'),
-        db.CheckConstraint('duration_minutes >= 0', name='duration_minutes_non_negative'),
+        db.CheckConstraint('duration_seconds >= 0', name='duration_seconds_non_negative'),
     )
 
     id = db.Column(db.Integer, primary_key=True)
@@ -71,7 +71,7 @@ class WorkoutExercise(db.Model):
     exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'))
     reps = db.Column(db.Integer)
     sets = db.Column(db.Integer)
-    duration_minutes = db.Column(db.Integer)
+    duration_seconds = db.Column(db.Integer)
 
     #A WorkoutExercise belongs to a Workout
     workout = db.relationship('Workout', back_populates='workout_exercises')
