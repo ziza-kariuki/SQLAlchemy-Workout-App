@@ -13,6 +13,12 @@ class Exercise(db.Model):
     category = db.Column(db.String)
     equipment_needed = db.Column(db.Boolean)
 
+#An Exercise has many WorkoutExercises
+    workout_exercises = db.relationship('WorkoutExercise', back_populates='exercise')
+    
+    #An Exercise has many Workouts through WorkoutExercises
+    workouts = association_proxy('workout_exercises', 'workout')
+
     def __repr__(self):
         return f'<Exercise {self.id}: {self.name}>'
 
@@ -25,11 +31,12 @@ class Workout(db.Model):
     duration_minutes = db.Column(db.Integer)
     notes = db.Column(db.Text)
 
-    #An Exercise has many WorkoutExercises
-    workout_exercises = db.relationship('WorkoutExercise', back_populates='exercise')
+    #A Workout has many WorkoutExercises
+    workout_exercises = db.relationship('WorkoutExercise', back_populates='workout')
 
-    #An Exercise has many Workouts through WorkoutExercises
-    workouts = association_proxy('workout_exercises', 'workout')
+    #A Workout has many Exercises through WorkoutExercises
+    exercises = association_proxy('workout_exercises', 'exercise')
+    
     def __repr__(self):
         return f'<Workout {self.id}: {self.date}>'
 
