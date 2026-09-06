@@ -65,28 +65,62 @@ def delete_workout(id):
  
 @app.route('/exercises', methods=['GET'])
 def get_exercises():
-    return {'message': 'not yet implemented'}, 501
+    exercises = Exercise.query.all()
+    return jsonify(exercises_schema.dump(exercises)), 200
  
  
 @app.route('/exercises/<int:id>', methods=['GET'])
 def get_exercise(id):
-    return {'message': 'not yet implemented'}, 501
+    exercise = Exercise.query.get(id)
+    if not exercise:
+        return jsonify({'error': 'Exercise not found'}), 404
+    return jsonify(exercise_schema.dump(exercise)), 200
  
  
 @app.route('/exercises', methods=['POST'])
 def create_exercise():
-    return {'message': 'not yet implemented'}, 501
+    data = request.get_json() or {}
+    try:
+        validated_data = exercise_schema.load(data)
+    except ValidationError as err:
+        return jsonify(err.messages), 400
+
+    new_exercise = Exercise(**validated_data)
+    db.session.add(new_exercise)
+    db.session.commit()
+    return jsonify(exercise_schema.dump(new_exercise)), 201
  
  
 @app.route('/exercises/<int:id>', methods=['DELETE'])
 def delete_exercise(id):
-    return {'message': 'not yet implemented'}, 501
+    exercise = Exercise.query.get(id)
+    if not exercise:
+        return jsonify({'error': 'Exercise not found'}), 404
+    db.session.delete(exercise)
+    db.session.commit()
+    return '', 204
  
- 
+ #Join Tble Route
 @app.route('/workouts/<int:workout_id>/exercises/<int:exercise_id>/workout_exercises', methods=['POST'])
 def add_exercise_to_workout(workout_id, exercise_id):
-    return {'message': 'not yet implemented'}, 501
- 
+    workout = Workout.query.get(workout_id)
+    exercise = Exercise.query.get(exercise_id)
+    
+    if not workout or not exercise:
+        return jsonify({'error': 'Workout or Exercise not found'}), 404
+
+    data = request.get_json() or {}
+    data['workout_id'] = workout_id
+    data['exercise_id'] = exercise_id
+
+    try:
+        validated_data = workout_exercise_schema.load(data)
+    except ValidationError as err:
+        return jsonify(err.messages), 400
+    new_workout_exercise = WorkoutExercise(**validated_data)
+    db.session.add(new_workout_exercise)
+    db.session.commit()
+    return jsonify(workout_exercise_schema.dump(new_workout_exercise)), 201
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
