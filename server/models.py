@@ -13,11 +13,18 @@ class Exercise(db.Model):
     category = db.Column(db.String)
     equipment_needed = db.Column(db.Boolean)
 
-#An Exercise has many WorkoutExercises
+    #An Exercise has many WorkoutExercises
     workout_exercises = db.relationship('WorkoutExercise', back_populates='exercise')
     
     #An Exercise has many Workouts through WorkoutExercises
     workouts = association_proxy('workout_exercises', 'workout')
+
+    #Validating that the name isn't left empty
+    @validates('name')
+    def validate_name(self, key, value):
+        if not value or not value.strip():
+            raise ValueError("Exercise name cannot be empty.")
+        return value
 
     def __repr__(self):
         return f'<Exercise {self.id}: {self.name}>'
@@ -36,6 +43,13 @@ class Workout(db.Model):
 
     #A Workout has many Exercises through WorkoutExercises
     exercises = association_proxy('workout_exercises', 'exercise')
+
+    #Validating that time given isn't negative
+    @validates('duration_minutes')
+    def validate_duration_minutes(self, key, value):
+            if value is not None and value <= 0:
+                raise ValueError("Workout duration must be a positive number.")
+            return value
     
     def __repr__(self):
         return f'<Workout {self.id}: {self.date}>'
@@ -45,12 +59,19 @@ class Workout(db.Model):
 class WorkoutExercise(db.Model):
     __tablename__ = 'workout_exercises'
 
+    #Table constraints
+    __table_args__ = (
+        db.CheckConstraint('reps >= 0', name='reps_non_negative'),
+        db.CheckConstraint('sets >= 0', name='sets_non_negative'),
+        db.CheckConstraint('duration_seconds >= 0', name='duration_seconds_non_negative'),
+    )
+
     id = db.Column(db.Integer, primary_key=True)
     workout_id = db.Column(db.Integer, db.ForeignKey('workouts.id'))
     exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'))
     reps = db.Column(db.Integer)
     sets = db.Column(db.Integer)
-    duration_seconds = db.Column(db.Integer)
+    duration_minutes = db.Column(db.Integer)
 
     #A WorkoutExercise belongs to a Workout
     workout = db.relationship('Workout', back_populates='workout_exercises')
