@@ -52,5 +52,11 @@ class WorkoutExercise(db.Model):
     sets = db.Column(db.Integer)
     duration_seconds = db.Column(db.Integer)
 
+    #A WorkoutExercise belongs to a Workout
+    workout = db.relationship('Workout', back_populates='workout_exercises')
+
+    #A WorkoutExercise belongs to an Exercise
+    exercise = db.relationship('Exercise', back_populates='workout_exercises')
+
     def __repr__(self):
         return f'<WorkoutExercise {self.id}>'
