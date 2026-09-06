@@ -63,7 +63,7 @@ class WorkoutExercise(db.Model):
     __table_args__ = (
         db.CheckConstraint('reps >= 0', name='reps_non_negative'),
         db.CheckConstraint('sets >= 0', name='sets_non_negative'),
-        db.CheckConstraint('duration_seconds >= 0', name='duration_seconds_non_negative'),
+        db.CheckConstraint('duration_minutes >= 0', name='duration_minutes_non_negative'),
     )
 
     id = db.Column(db.Integer, primary_key=True)
