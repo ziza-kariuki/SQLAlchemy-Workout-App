@@ -2,6 +2,16 @@
 A backend API for a workout tracking application used by personal trainers. The API will be responsible for tracking workouts and their associated exercises. Each workout can include multiple exercises, with sets, reps, or duration attached to each. Exercises are reusable, so a trainer can add the same exercise to various workouts.
 
 ## Features
+### Workout Management
+* **Create Workouts:** Add new workout sessions to the system.
+* **View Workouts:** Retrieve and inspect existing workout records.
+* **Delete Workouts:** Permanently remove workouts from the database.
+
+### Exercise Management
+* **Create Exercises:** Add new exercises to the master library.
+* **View Exercises:** Browse and view all available exercises.
+* **Delete Exercises:** Remove exercises from the system.
+* **Reusable Exercises:** Reuse individual exercises across multiple workouts.
 
 ## Installation Instructions
 1. Clone the repository and navigate into the project directory:
